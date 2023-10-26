@@ -18,6 +18,7 @@ export class FirstPageComponent  {
   constructor(private fireStorage:AngularFireStorage ,private authService: AuthService){}
 
 
+
   
 //   @ViewChild('selectionCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 //   @ViewChild('image', { static: true }) image!: ElementRef<HTMLImageElement>;
@@ -119,6 +120,11 @@ export class FirstPageComponent  {
 //     console.log(url)
 //   }
 // }
+
+
+
+
+
 onFileChange(event:any){ 
   this.file = event.target.files[0];
 }
