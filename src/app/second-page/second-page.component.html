@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-center">
+    <div class="image-container">
+      <img #image src="{{mapid}}" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()" style="display: none;">
+      <canvas #selectionCanvas (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"></canvas>
+    </div>
+  </div>
+  <div *ngFor="let area of selectedAreas">
+    <p>Selected Area: x1={{ area.x1 }}, y1={{ area.y1 }}, x2={{ area.x2 }}, y2={{ area.y2 }}</p>
+  </div>
