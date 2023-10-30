@@ -1,11 +1,39 @@
 <div class="d-flex justify-content-center">
-    <div class="image-container">
-      <img #image src="{{mapid}}" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
+  <div class="image-container">
+    <!-- <img #image src="{{mapid}}" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
         (mouseup)="onMouseUp()" style="display: none;">
       <canvas #selectionCanvas (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
-        (mouseup)="onMouseUp()"></canvas>
+        (mouseup)="onMouseUp()"></canvas> -->
+    <div>
+      <canvas #myCanvas width="800" height="600" (click)="addVertex($event)"></canvas>
+  
+      <button (click)="getCordinates()">Get Coordinates</button>
+      
+      
+      
+  <table>
+    <thead>
+      <tr>
+       <th> Action</th>
+       <th> Message</th>
+       <th> Message</th>
+       
+      </tr>
+
+    </thead>
+    <tbody>
+      <tr *ngFor=" let data of tableData; let i = index"> 
+           <td><input type="text" name="message" placeholder="Type your message here" [(ngModel)]="updatedData.message"></td>
+           <td><input type="text" name="message" placeholder="Type your message here" [(ngModel)]="updatedData.message"></td>
+           <td><button (click)="startNewPolygon()">Start New Polygon</button></td>
+          
+      </tr>
+    </tbody>
+  </table>
+  <button (click)="addnewarea()"> Add New Area</button>
+
+  <img #myImage src="{{mapid}}" alt="Image" style="display: none;" (load)="onImageLoad()">
     </div>
   </div>
-  <div *ngFor="let area of selectedAreas">
-    <p>Selected Area: x1={{ area.x1 }}, y1={{ area.y1 }}, x2={{ area.x2 }}, y2={{ area.y2 }}</p>
-  </div>
+
+</div>
