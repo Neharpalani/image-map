@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AuthService } from 'src/auth.service';
+import { AuthService } from 'src/auth.service'
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -105,7 +105,7 @@ cordinatesList: any[] = [];
     this.currentPolygon = [];
    
   
-    console.log('polygons', this.polygons);
+    console.log("ddddddddd", this);
    
   }
   
@@ -178,14 +178,12 @@ cordinatesList: any[] = [];
     this.indexno++
     console.log(this.tableData)
   }
-  async onSubmit() {
-    
-  const path = `polygon/${this.file.name}`;
-  const uploadTask =await this.fireStorage.upload(path, this.file);
-  const url = await uploadTask.ref.getDownloadURL();
-  this.mapData.image = url;
-
-
+async onSubmit() {
+  // const path = `polygon/${this.file.name}`;
+  // const uploadTask =await this.fireStorage.upload(path, this.file);
+  // const url = await uploadTask.ref.getDownloadURL();
+  // this.mapData.image = url;
+  
  this.authService.createImage(this.mapData).subscribe((res:any)=>{
  this.userData = res || [];
  console.log(this.userData["message"]);
@@ -202,23 +200,4 @@ if(this.userData["message"]=="image added successfully"){
 
 }
 
-    // Redraw the image
-    this.ctx.drawImage(this.image.nativeElement, 0, 0);
-
-    // Draw the polygon
-    this.ctx.strokeStyle = 'red';
-    this.ctx.lineWidth = 2;
-    this.ctx.beginPath();
-
-    if (this.polygonPoints.length > 0) {
-      this.ctx.moveTo(this.polygonPoints[0].x, this.polygonPoints[0].y);
-
-      for (let i = 1; i < this.polygonPoints.length; i++) {
-        this.ctx.lineTo(this.polygonPoints[i].x, this.polygonPoints[i].y);
-      }
-
-      this.ctx.closePath();
-      this.ctx.stroke();
-    }
-  }
 }
