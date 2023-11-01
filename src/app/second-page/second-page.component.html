@@ -27,7 +27,7 @@
           <tr *ngFor=" let data of tableData; let i = index">
             <td><button (click)="startNewPolygon(i)">Start New Polygon</button></td>
 
-            <td><input type="text" name="message" placeholder="Type your message here"></td>
+            <td><input type="text" name="message" [(ngModel)]="data.message" placeholder="Type your message here"></td>
 
             <td><button (click)="getCordinates(i,data)">Get Coordinates</button></td>
 
@@ -45,6 +45,7 @@
     </table>
   </form>
   <button (click)="addnewarea()"> Add New Area</button>
+<button routerLink="/third-page">View Gallery</button>
 
       <img #myImage src="{{mapid}}" alt="Image" style="display: none;" (load)="onImageLoad()">
     </div>

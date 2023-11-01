@@ -12,7 +12,7 @@ export class SecondPageComponent {
 
   indexno: number =1;
   file: any;
-  mapData = { image: '',message:'',cordinates:''}
+  mapData:any = { image: '',message:[],cordinates:[]}
   userData: any
   mapRes:any
   mapid:any
@@ -22,7 +22,9 @@ cordinatesList: any[] = [];
   ngOnInit() {
     this.routing.queryParams.subscribe( params => {
       this.mapid = params['url']
+      this.mapData.image = params['url'];
       console.log(this.mapid)
+     
     })     
   }
   @ViewChild('myCanvas', { static: true })
@@ -183,6 +185,12 @@ async onSubmit() {
   // const uploadTask =await this.fireStorage.upload(path, this.file);
   // const url = await uploadTask.ref.getDownloadURL();
   // this.mapData.image = url;
+  this.mapData.message = [];
+  this.mapData.cordinates = [];
+  this.tableData.map((item:any)=>{
+    this.mapData.message.push(item.message);
+    this.mapData.cordinates.push(item.polygons);
+  })
   
  this.authService.createImage(this.mapData).subscribe((res:any)=>{
  this.userData = res || [];

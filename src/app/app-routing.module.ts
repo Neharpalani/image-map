@@ -10,6 +10,7 @@ const routes: Routes = [];
 
     {path: 'first-page', component: FirstPageComponent},
     {path: '', component: FirstPageComponent},
+    
   ])],
   exports: [RouterModule]
 })
