@@ -1,4 +1,4 @@
-<table border="1">
+<table border="1" width="100%">
     <th>
         S.NO
     </th>
@@ -8,9 +8,19 @@
     <th>
         Details
     </th>
-    <tr>
-        <td>1.</td>
-        <td><img src=""></td>
-    </tr>
-    
+   <th>Delete</th>
+
+
+
+    <tr *ngFor="let post of mapData let i = index">
+    <td>{{i+1}}</td>
+    <td><img src={{post?.image}} width="100px"> </td>
+    <!-- <td>{{ post.cordinates}}</td>
+    <td>{{ post.message }}</td> -->
+   <td> <button routerLink="/fourth-page" (click)="view(post?._id)">View</button></td>
+    <td><button (click)="deletemapimg(post?._id)">Delete</button>
+    </td> 
+   </tr> 
+        
+     
 </table>

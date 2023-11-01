@@ -7,6 +7,7 @@ import { CanActivate,ActivatedRoute, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService   {
+ 
   
   constructor(public auth: ApiService, public router: Router) {}
 
@@ -18,4 +19,20 @@ export class AuthService   {
       body
     }); 
   }
+  deletemap(id:any) {
+    
+    
+    return this.auth.request({
+      path:`http://localhost:4000/map/delete/${id}`,
+      method:"DELETE",
+    }); 
+  }
+
+  singleBlog(id:any){
+    return this.auth.request({
+      path:`http://localhost:4000/map/${id}`,
+      method:"GET",
+    }); 
+  }
+
 }

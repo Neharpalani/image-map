@@ -13,13 +13,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SecondPageComponent } from './second-page/second-page.component';
 import { ThirdPageComponent } from './third-page/third-page.component';
+import { FourthPageComponent } from './fourth-page/fourth-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FirstPageComponent,
     SecondPageComponent,
-    ThirdPageComponent
+    ThirdPageComponent,
+    FourthPageComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -33,7 +35,9 @@ import { ThirdPageComponent } from './third-page/third-page.component';
       {path: 'first-page', component: FirstPageComponent},
       {path: '', component: FirstPageComponent},
       {path: 'second-page', component: SecondPageComponent},
-      {path: 'third-page', component: ThirdPageComponent}
+      {path: 'third-page', component: ThirdPageComponent},
+      {path: 'fourth-page', component: FourthPageComponent}
+
 
     ]),
  
