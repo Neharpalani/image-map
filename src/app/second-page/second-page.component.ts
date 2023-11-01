@@ -13,10 +13,12 @@ export class SecondPageComponent {
 
   indexno: number =1;
   file: any;
-  updatedData = { image: '',message:''}
+  mapData = { image: '',message:'',cordinates:''}
   userData: any
   mapRes:any
   mapid:any
+  currentRowIndex: number | null = null; 
+cordinatesList: any[] = [];
   constructor(private fireStorage: AngularFireStorage, private router: Router, private routing: ActivatedRoute, private authService: AuthService, private renderer: Renderer2) { }
   ngOnInit() {
     this.routing.queryParams.subscribe( params => {
@@ -29,7 +31,7 @@ export class SecondPageComponent {
   @ViewChild('myImage', { static: true }) image!: ElementRef;
   private ctx!: CanvasRenderingContext2D;
 
-  private polygons: { x: number; y: number }[][] = [];
+   polygons: { x: number; y: number }[][] = [];
   private currentPolygon: { x: number; y: number }[] = [];
 
   private isDrawing = false; // Flag to indicate if a polygon is being drawn
@@ -49,32 +51,66 @@ export class SecondPageComponent {
       this.drawPolygons(); // Redraw all saved polygons
     }
   }
+  // startNewPolygon(index: any) {
+  //   this.currentPolygon = [];
 
-  startNewPolygon() {
-    // Finish the current polygon and add it to the polygons array
+  //   if (this.currentPolygon.length > 2) {
+  //     this.polygons.push([...this.currentPolygon]);
+  //   }
+
+  //   this.drawPolygons();
+  //   this.isDrawing = true;
+
+  //   // Set the current row index
+  //   this.currentRowIndex = index;
+  // }
+  // getCordinates(index: any) {
+  //   if (this.currentPolygon.length > 2) {
+  //     this.polygons.push([...this.currentPolygon]);
+  //   }
+
+  //   this.currentPolygon = [];
+
+  //   console.log('polygons', this.polygons);
+  //   this.isDrawing = false;
+
+  //   // Use the current row index
+  //   console.log('Current Row Index:', this.currentRowIndex);
+  // }
+
+
+
+
+  startNewPolygon(index: any) {
+     
+
     if (this.currentPolygon.length > 2) {
-      this.polygons.push([...this.currentPolygon]);
+    this.polygons.push([...this.currentPolygon]);
     }
-
-    // Reset the current polygon
     this.currentPolygon = [];
-
-    // Redraw all saved polygons
     this.drawPolygons();
-
-    // Start drawing a new polygon
     this.isDrawing = true;
   }
-  getCordinates() {
-    // Finish the current polygon and add it to the polygons array
-    if (this.currentPolygon.length > 2) {
-      this.polygons.push([...this.currentPolygon]);
-    }
-    console.log('polygons', this.polygons);
-  }
-
   
-   drawPolygons() {
+  
+  getCordinates( index:any,data:any) {
+    console.log("button normal")
+    
+    if (this.currentPolygon.length > 2) {
+    
+      this.polygons = [this.currentPolygon.map(point => ( point ))];
+      data['polygons'] = [this.currentPolygon.map(point => ( point ))];
+
+    }
+    // Reset the current polygon
+    this.currentPolygon = [];
+   
+  
+    console.log('polygons', this.polygons);
+   
+  }
+  
+  drawPolygons() {
     const ctx = this.ctx;
     ctx.clearRect(
       0,
@@ -92,7 +128,6 @@ export class SecondPageComponent {
 
     // Draw the current polygon (if it's being drawn)
     this.drawPolygon(this.currentPolygon);
-
   }
 
   drawPolygon(vertices: { x: number; y: number }[]) {
@@ -119,35 +154,6 @@ export class SecondPageComponent {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(image, 0, 0); // Draw the image at (0, 0) on the canvas
   }
-
-  
-  //   // Customize the polygon's stroke and fill styles
-  //   ctx.strokeStyle = 'blue'; // Stroke color
-  //   ctx.lineWidth = 2; // Stroke width
-  //   ctx.fillStyle = 'rgba(0, 0, 255, 0.3)'; // Fill color with transparency
-  //   ctx.stroke(); // Draw the stroke
-  //   ctx.fill(); // Fill the polygon
-  // }
-  
-
-  // // @ViewChild('selectionCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
-  // // @ViewChild('image', { static: true }) image!: ElementRef<HTMLImageElement>;
-
-  // private ctx: CanvasRenderingContext2D | null = null;
-  // private isSelecting = false;
-  // private startX!: number;
-  // private startY!: number;
-  // private endX!: number;
-  // private endY!: number;
-  // selectedAreas: { x1: number; y1: number; x2: number; y2: number }[] = [];
-
-  // ngAfterViewInit(): void {
-  //   if (this.image) {
-  //     this.image.nativeElement.onload = () => this.onImageLoad();
-  //   }
-  // }
-
-
   onImageLoad() {
     console.log('Image loaded');
     // Set the canvas size to match the image size after the image is loaded
@@ -168,9 +174,33 @@ export class SecondPageComponent {
   tableData: any[] = [];
 
   addnewarea() {
+   
     this.tableData.push({ index: this.indexno});
     this.indexno++
     console.log(this.tableData)
   }
+  async onSubmit() {
+    
+  const path = `polygon/${this.file.name}`;
+  const uploadTask =await this.fireStorage.upload(path, this.file);
+  const url = await uploadTask.ref.getDownloadURL();
+  this.mapData.image = url;
+
+
+ this.authService.createImage(this.mapData).subscribe((res:any)=>{
+ this.userData = res || [];
+ console.log(this.userData["message"]);
+
+if(this.userData["message"]=="image added successfully"){
+
+  alert("data added successfully");
+ 
+}else{ 
+
+  alert("OOPs Something went wrong");
+}
+})
+
+}
 
 }

@@ -6,33 +6,47 @@
         (mouseup)="onMouseUp()"></canvas> -->
     <div>
       <canvas #myCanvas width="800" height="600" (click)="addVertex($event)"></canvas>
-  
-      <button (click)="getCordinates()">Get Coordinates</button>
-      
-      
-      
-  <table>
-    <thead>
-      <tr>
-       <th> Action</th>
-       <th> Message</th>
-       <th> Message</th>
-       
-      </tr>
 
-    </thead>
-    <tbody>
-      <tr *ngFor=" let data of tableData; let i = index"> 
-           <td><input type="text" name="message" placeholder="Type your message here" [(ngModel)]="updatedData.message"></td>
-           <td><input type="text" name="message" placeholder="Type your message here" [(ngModel)]="updatedData.message"></td>
-           <td><button (click)="startNewPolygon()">Start New Polygon</button></td>
-          
-      </tr>
-    </tbody>
-  </table>
+      <!-- <button (click)="getCordinates()">Get Coordinates</button> -->
+
+
+      <form >
+      <table>
+        <thead>
+          <tr>
+            <th> Action</th>
+            <th> Message</th>
+            <th>helo</th>
+            <th>cordinates</th>
+
+
+          </tr>
+
+        </thead>
+        <tbody>
+          <tr *ngFor=" let data of tableData; let i = index">
+            <td><button (click)="startNewPolygon(i)">Start New Polygon</button></td>
+
+            <td><input type="text" name="message" placeholder="Type your message here"></td>
+
+            <td><button (click)="getCordinates(i,data)">Get Coordinates</button></td>
+
+            <td *ngFor="let cordinates of data?.polygons">
+              <p *ngFor="let data of cordinates">
+                ({{data.x}}, {{data.y}})
+              </p>
+            </td>
+
+          </tr>
+        </tbody>
+      
+  
+      <button (click)="onSubmit()" type="submit" id="btn-1">SAVE</button>
+    </table>
+  </form>
   <button (click)="addnewarea()"> Add New Area</button>
 
-  <img #myImage src="{{mapid}}" alt="Image" style="display: none;" (load)="onImageLoad()">
+      <img #myImage src="{{mapid}}" alt="Image" style="display: none;" (load)="onImageLoad()">
     </div>
   </div>
 

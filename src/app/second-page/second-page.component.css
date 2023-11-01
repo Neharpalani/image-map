@@ -17,3 +17,7 @@ table {
   tr:nth-child(even) {
     background-color: #f9f9f9;
   }
+  #btn-1{
+    background-color: rgb(74, 74, 231);
+    color: white
+  }
