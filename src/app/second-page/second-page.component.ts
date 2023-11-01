@@ -10,64 +10,197 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SecondPageComponent {
 
-  // ... Other class properties
+  indexno: number =1;
+  file: any;
+  mapData = { image: '',message:'',cordinates:''}
+  userData: any
+  mapRes:any
+  mapid:any
+  currentRowIndex: number | null = null; 
+cordinatesList: any[] = [];
+  constructor(private fireStorage: AngularFireStorage, private router: Router, private routing: ActivatedRoute, private authService: AuthService, private renderer: Renderer2) { }
+  ngOnInit() {
+    this.routing.queryParams.subscribe( params => {
+      this.mapid = params['url']
+      console.log(this.mapid)
+    })     
+  }
+  @ViewChild('myCanvas', { static: true })
+  canvas!: ElementRef;
+  @ViewChild('myImage', { static: true }) image!: ElementRef;
+  private ctx!: CanvasRenderingContext2D;
 
-  // Store the selected polygon points
-  private polygonPoints: { x: number; y: number }[] = [];
-  selectedAreas: { x1: number; y1: number; x2: number; y2: number }[] = [];
-  mapid: any;
-  private ctx: CanvasRenderingContext2D | null = null;
-  canvas: any;
-  image: any;
+   polygons: { x: number; y: number }[][] = [];
+  private currentPolygon: { x: number; y: number }[] = [];
+
+  private isDrawing = false; // Flag to indicate if a polygon is being drawn
+
+  ngAfterViewInit() {
+    this.ctx = this.canvas.nativeElement.getContext('2d');
+  }
+
+  addVertex(event: MouseEvent) {
+    if (this.isDrawing) {
+      const canvas = this.canvas.nativeElement;
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      this.currentPolygon.push({ x, y }); // Add the vertex to the current polygon
+      this.drawPolygons(); // Redraw all saved polygons
+    }
+  }
+  // startNewPolygon(index: any) {
+  //   this.currentPolygon = [];
+
+  //   if (this.currentPolygon.length > 2) {
+  //     this.polygons.push([...this.currentPolygon]);
+  //   }
+
+  //   this.drawPolygons();
+  //   this.isDrawing = true;
+
+  //   // Set the current row index
+  //   this.currentRowIndex = index;
+  // }
+  // getCordinates(index: any) {
+  //   if (this.currentPolygon.length > 2) {
+  //     this.polygons.push([...this.currentPolygon]);
+  //   }
+
+  //   this.currentPolygon = [];
+
+  //   console.log('polygons', this.polygons);
+  //   this.isDrawing = false;
+
+  //   // Use the current row index
+  //   console.log('Current Row Index:', this.currentRowIndex);
+  // }
 
 
-  // ... Other class methods
 
-  // Handle mouse down event
-  onMouseDown(e: MouseEvent) {
+
+  startNewPolygon(index: any) {
+     
+
+    if (this.currentPolygon.length > 2) {
+    this.polygons.push([...this.currentPolygon]);
+    }
+    this.currentPolygon = [];
+    this.drawPolygons();
+    this.isDrawing = true;
+  }
+  
+  
+  getCordinates( index:any,data:any) {
+    console.log("button normal")
+    
+    if (this.currentPolygon.length > 2) {
+    
+      this.polygons = [this.currentPolygon.map(point => ( point ))];
+      data['polygons'] = [this.currentPolygon.map(point => ( point ))];
+
+    }
+    // Reset the current polygon
+    this.currentPolygon = [];
+   
+  
+    console.log('polygons', this.polygons);
+   
+  }
+  
+  drawPolygons() {
+    const ctx = this.ctx;
+    ctx.clearRect(
+      0,
+      0,
+      this.canvas.nativeElement.width,
+      this.canvas.nativeElement.height
+    );
+
+    // Redraw the initial image
+    this.drawImage();
+
+    for (const polygon of this.polygons) {
+      this.drawPolygon(polygon); // Draw each saved polygon
+    }
+
+    // Draw the current polygon (if it's being drawn)
+    this.drawPolygon(this.currentPolygon);
+  }
+
+  drawPolygon(vertices: { x: number; y: number }[]) {
+    const ctx = this.ctx;
+
+    ctx.beginPath();
+
+    if (vertices.length >= 2) {
+      ctx.moveTo(vertices[0].x, vertices[0].y);
+
+      for (let i = 1; i < vertices.length; i++) {
+        ctx.lineTo(vertices[i].x, vertices[i].y);
+      }
+    }
+
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  drawImage() {
+    const canvas = this.canvas.nativeElement;
+    const image = this.image.nativeElement;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0); // Draw the image at (0, 0) on the canvas
+  }
+  onImageLoad() {
+    console.log('Image loaded');
+    // Set the canvas size to match the image size after the image is loaded
+    this.canvas.nativeElement.width = this.image.nativeElement.width;
+    this.canvas.nativeElement.height = this.image.nativeElement.height;
+
+    // Get the rendering context
+    this.ctx = this.canvas.nativeElement.getContext('2d');
     if (!this.ctx) {
-      console.error('2D context is not available');
-      return;
+      console.error('Could not get 2D context for canvas');
+      return;  
     }
 
-    // Record the mouse position
-    const x = e.offsetX;
-    const y = e.offsetY;
-
-    // Add the point to the polygonPoints array
-    this.polygonPoints.push({ x, y });
-
-    // Draw the polygon with the updated points
-    this.drawSelectionPolygon();
+    //     // Draw the initial image
+    this.ctx.drawImage(this.image.nativeElement, 0, 0);
   }
 
-  // Handle mouse move event (if needed)
-  onMouseMove(e: MouseEvent) {
-    // Handle mouse move logic here
-    // You can access event properties like event.clientX and event.clientY
+  tableData: any[] = [];
+
+  addnewarea() {
+   
+    this.tableData.push({ index: this.indexno});
+    this.indexno++
+    console.log(this.tableData)
   }
+  async onSubmit() {
+    
+  const path = `polygon/${this.file.name}`;
+  const uploadTask =await this.fireStorage.upload(path, this.file);
+  const url = await uploadTask.ref.getDownloadURL();
+  this.mapData.image = url;
 
-  // Handle mouse up event
-  onMouseUp() {
-    // Finalize the polygon drawing
-    this.drawSelectionPolygon();
 
-    // Calculate the polygon's coordinates or perform other actions
-    if (this.polygonPoints.length > 2) {
-      const coordinates = this.polygonPoints.map(point => `x=${point.x}, y=${point.y}`).join(', ');
-      console.log(`Polygon Coordinates: ${coordinates}`);
-    }
-  }
+ this.authService.createImage(this.mapData).subscribe((res:any)=>{
+ this.userData = res || [];
+ console.log(this.userData["message"]);
 
-  // Draw the polygon using the recorded points
-  drawSelectionPolygon() {
-    if (!this.ctx) {
-      console.error('2D context is not available');
-      return;
-    }
+if(this.userData["message"]=="image added successfully"){
 
-    // Clear the canvas
-    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  alert("data added successfully");
+ 
+}else{ 
+
+  alert("OOPs Something went wrong");
+}
+})
+
+}
 
     // Redraw the image
     this.ctx.drawImage(this.image.nativeElement, 0, 0);
