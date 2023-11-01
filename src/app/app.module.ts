@@ -11,11 +11,13 @@ import { AuthService } from 'src/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SecondPageComponent } from './second-page/second-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FirstPageComponent
+    FirstPageComponent,
+    SecondPageComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -28,6 +30,8 @@ import { CommonModule } from '@angular/common';
     RouterModule.forRoot([
       {path: 'first-page', component: FirstPageComponent},
       {path: '', component: FirstPageComponent},
+      {path: 'second-page', component: SecondPageComponent},
+
     ]),
  
 ],

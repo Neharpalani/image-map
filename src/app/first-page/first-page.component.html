@@ -7,19 +7,16 @@
 <div class="container-fluid">
 
   <h2> image-mapping </h2>
-  
-    <form (ngSubmit)="onSubmit()">
+
+  <form (ngSubmit)="onSubmit()">
     <div class="form-group">
       <p>&nbsp;</p>
       <input type="file" class="form-control-file" id="image" accept="image/*" (change)="onFileChange($event)">
       <!-- <img src="gs://office-map-c94f2.appspot.com/yt/componenet one.png"> -->
-     <button type="submit">submit</button>
+      <button type="submit">submit</button>
     </div>
   </form>
+
+  <!-- <div><img src="{{mapData.image}}" alt="" #image> -->
  
-  <div><img src="{{mapData.image}}" alt="">
-    
-  
-  
-  </div>
 </div>
