@@ -59,7 +59,8 @@ fetchData() {
   view(id:any){
     this.router.navigate(['/fourth-page'],{
     queryParams:{
-      id:id
+      id:id,
+    
     }
   })}
 
