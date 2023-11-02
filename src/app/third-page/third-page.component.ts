@@ -13,6 +13,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./third-page.component.css']
 })
 export class ThirdPageComponent implements OnInit{
+  
 
   mapData: any;
   message: any=[];
@@ -20,6 +21,7 @@ export class ThirdPageComponent implements OnInit{
   
 
 ngOnInit(){
+  
   this.fetchData();
 }
 
@@ -56,13 +58,16 @@ fetchData() {
       }
    })
   }
-  view(id:any){
+  view(post:any){
     this.router.navigate(['/fourth-page'],{
     queryParams:{
-      id:id,
+      id:post?._id,
+      img: post?.image
     
     }
   })}
+ 
+  
 
 
 

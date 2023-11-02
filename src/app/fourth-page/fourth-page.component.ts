@@ -11,26 +11,32 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./fourth-page.component.css']
 })
 export class FourthPageComponent {
-  
-id:any;
-mapData:any = { image: ''}
+viewImage:any;
+imageUrl:string = ''
+
 
   constructor(private fireStorage: AngularFireStorage, private route: ActivatedRoute, private authService: AuthService) { }
   ngOnInit() {
-    const userId = this.route.snapshot.queryParamMap.get('id');
-    //this.router.queryParamMap.subscribe((params)=>
-    {
-  //const userId=params['id'];
   
-  this.authService.singleBlog(userId).subscribe(
-    (data) => {
-      this.mapData = data?.data;
-      console.log(this.mapData);
-    },
-    (error) => {
-      console.log('error fetching user data', error);
-    }
-  );
+    // Get the user ID from the query parameters
+    this.route.queryParams.subscribe((params) => {
+      const userId = params['id'];
+      this.imageUrl = params['img']
+      console.log("data454",this.imageUrl)
+
+      // Fetch user data based on the ID
+      this.authService.singleBlog(userId).subscribe(
+        (data) => {
+          this.viewImage  = data?.data;
+          console.log(this.viewImage)
+        },
+        (error) => {
+          console.error('Error fetching user data', error);
+        }
+      );
+    });
   }
   
-  }}
+  }
+  
+  
